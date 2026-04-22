@@ -17,10 +17,12 @@ function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${josefin.className} min-h-screen bg-primary-950 text-primary-100`}
+        className={`${josefin.className} antialiased min-h-screen bg-primary-950 text-primary-100 flex flex-col`}
       >
         <Header />
-        <main>{children}</main>
+        <div className="flex-1 px-8 py-12">
+          <main className="max-w-7xl mx-auto">{children}</main>
+        </div>
       </body>
     </html>
   );
