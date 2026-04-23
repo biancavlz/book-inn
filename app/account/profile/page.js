@@ -5,6 +5,10 @@ export default function Page() {
   const countryFlag = "pt.jpg";
   const nationality = "portugal";
 
+  const metadata = {
+    title: "Update profile",
+  };
+
   return (
     <div>
       <h2 className="font-semibold text-2xl text-accent-400 mb-4">
