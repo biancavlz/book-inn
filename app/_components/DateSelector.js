@@ -1,8 +1,9 @@
 "use client";
 
-import { isWithinInterval } from "date-fns";
+import { isWithinInterval, differenceInDays } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { useReservation } from "./ReservationContext";
 
 function isAlreadyBooked(range, datesArr) {
   return (
@@ -15,28 +16,32 @@ function isAlreadyBooked(range, datesArr) {
 }
 
 function DateSelector({ settings, bookedDates, cabin }) {
-  // CHANGE
-  const regularPrice = 23;
-  const discount = 23;
-  const numNights = 23;
-  const cabinPrice = 23;
-  const range = { from: null, to: null };
+  const { range, setRange, resetRange } = useReservation();
 
-  // SETTINGS
+
+  const regularPrice = cabin.regularPrice;
+  const discount = cabin.discount;
+  const numNights =
+    range.from && range.to ? differenceInDays(range.to, range.from) : 0;
+  const cabinPrice = numNights * (regularPrice - discount);
+
   const { minBookingLength, maxBookingLength } = settings;
+
+  const isRangeValid =
+    numNights >= minBookingLength && numNights <= maxBookingLength;
+  const isBooked = isAlreadyBooked(range, bookedDates);
 
   return (
     <div className="flex flex-col justify-between">
       <DayPicker
         className="pt-12 place-self-center"
         mode="range"
-        min={minBookingLength + 1}
-        max={maxBookingLength}
+        onSelect={setRange}
+        selected={range}
+        disabled={bookedDates}
         startMonth={new Date()}
-        // hidden={{ before: new Date() }}
-        // endMonth={new Date(year, 5)}
         captionLayout="dropdown"
-        numberOfMonths={1}
+        numberOfMonths={2}
       />
 
       <div className="flex items-center justify-between px-8 bg-accent-500 text-primary-800 h-[72px]">
@@ -70,12 +75,23 @@ function DateSelector({ settings, bookedDates, cabin }) {
         {range.from || range.to ? (
           <button
             className="border border-primary-800 py-2 px-4 text-sm font-semibold"
-            onClick={() => resetRange()}
+            onClick={resetRange}
           >
             Clear
           </button>
         ) : null}
       </div>
+
+      {range.from && range.to && !isRangeValid && (
+        <p className="text-red-600 mt-2">
+          Booking length must be between {minBookingLength} and{" "}
+          {maxBookingLength} nights.
+        </p>
+      )}
+
+      {range.from && range.to && isBooked && (
+        <p className="text-red-600 mt-2">Selected dates are already booked.</p>
+      )}
     </div>
   );
 }
