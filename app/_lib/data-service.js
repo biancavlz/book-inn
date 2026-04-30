@@ -154,7 +154,7 @@ export async function getCountries() {
 
 /////////////
 // CREATE
-
+/*
 export async function createGuest(newGuest) {
   const { data, error } = await supabase.from("guests").insert([newGuest]);
 
@@ -228,3 +228,4 @@ export async function deleteBooking(id) {
   }
   return data;
 }
+*/
