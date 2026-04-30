@@ -3,6 +3,7 @@
 import { signIn, signOut } from "./auth";
 import { supabase } from "./supabase";
 import { auth } from "../_lib/auth";
+import { revalidatePath } from "next/cache";
 
 export async function signInAction() {
   await signIn("google", { redirectTo: "/account" });
@@ -38,6 +39,8 @@ export async function updateGuest(formData) {
     .single();
 
   if (error) throw new Error("Guest could not be updated");
+
+  revalidatePath("/account/profile");
 
   return data;
 }
