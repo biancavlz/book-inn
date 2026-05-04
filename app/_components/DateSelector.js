@@ -1,6 +1,11 @@
 "use client";
 
-import { isWithinInterval, differenceInDays } from "date-fns";
+import {
+  isWithinInterval,
+  differenceInDays,
+  isPast,
+  isSameDay,
+} from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { useReservation } from "./ReservationContext";
@@ -17,12 +22,13 @@ function isAlreadyBooked(range, datesArr) {
 
 function DateSelector({ settings, bookedDates, cabin }) {
   const { range, setRange, resetRange } = useReservation();
+  const displayRange = isAlreadyBooked(range, bookedDates) ? {} : range;
+  const { regularPrice, discount } = cabin;
 
-
-  const regularPrice = cabin.regularPrice;
-  const discount = cabin.discount;
   const numNights =
-    range.from && range.to ? differenceInDays(range.to, range.from) : 0;
+    displayRange.from && displayRange.to
+      ? differenceInDays(displayRange.to, displayRange.from)
+      : 0;
   const cabinPrice = numNights * (regularPrice - discount);
 
   const { minBookingLength, maxBookingLength } = settings;
@@ -37,8 +43,11 @@ function DateSelector({ settings, bookedDates, cabin }) {
         className="pt-12 place-self-center"
         mode="range"
         onSelect={setRange}
-        selected={range}
-        disabled={bookedDates}
+        selected={displayRange}
+        disabled={(currDate) =>
+          isPast(currDate) ||
+          bookedDates.some((date) => isSameDay(date, currDate))
+        }
         startMonth={new Date()}
         captionLayout="dropdown"
         numberOfMonths={2}
