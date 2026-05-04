@@ -106,6 +106,8 @@ export async function createReservation(reservationData, formData) {
   if (error) {
     throw new Error("Reservation could not be created");
   }
+
+  revalidatePath(`/cabins/${reservationData.cabinId}`);
 }
 
 export async function deleteReservation(bookingId) {
