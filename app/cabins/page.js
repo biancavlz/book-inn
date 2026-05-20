@@ -3,10 +3,8 @@ import { Suspense } from "react";
 import CabinList from "@/app/_components/CabinList";
 import Spinner from "@/app/_components/Spinner";
 import Filter from "../_components/Filter";
-import { useReservation } from "../_components/ReservationContext";
 import ReservationReminder from "../_components/ReservationReminder";
 
-// export const revalidate = 3600;
 export const metadata = { title: "Cabins" };
 
 async function Page({ searchParams }) {

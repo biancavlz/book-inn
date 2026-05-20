@@ -5,7 +5,6 @@ import { getGuest } from "@/app/_lib/data-service";
 
 export default async function Page() {
   const session = await auth();
-  // console.log(session);
   const guest = await getGuest(session.user.email);
 
   const metadata = {

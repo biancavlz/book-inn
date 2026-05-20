@@ -45,7 +45,6 @@ function ReservationForm({ cabin, user }) {
       </div>
 
       <form
-        // action={createReservationWithData}
         action={async (formData) => {
           await createReservationWithData(formData);
           resetRange();
